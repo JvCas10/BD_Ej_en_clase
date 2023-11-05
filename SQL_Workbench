@@ -1,0 +1,98 @@
+use EjEnClase;
+
+CREATE TABLE Cargo (
+    id_cargo INT PRIMARY KEY NOT NULL,
+    nombre VARCHAR(20),
+	salario_maximo BIGINT,
+    salario_minmo BIGINT
+);
+
+CREATE TABLE Empleados (
+    id_empleado INT PRIMARY KEY NOT NULL,
+    nombre VARCHAR(20),
+    zona VARCHAR(20),
+    calle VARCHAR(20),
+    no_casa int,
+    telefono BIGINT,
+	email VARCHAR(20),
+    dpi BIGINT,
+    estado_civil VARCHAR(20),
+    salario int,
+    fecha_retiro date
+);
+
+CREATE TABLE Regiones (
+	id_region INT PRIMARY KEY NOT NULL,
+    descripcion VARCHAR(20),
+	id_jefe INT
+);
+
+CREATE TABLE Areas(
+	id_area INT PRIMARY KEY NOT NULL,
+    nombre VARCHAR(20)
+);
+
+CREATE TABLE Telefonos(
+	id_telefonos INT PRIMARY KEY NOT NULL,
+    numero BIGINT
+);
+
+CREATE TABLE Cargo_empleados(
+	id_cargo INT PRIMARY KEY NOT NULL,
+	id_empleado INT NOT NULL,
+    fecha_inicio DATE,
+    fecha_fin DATE,
+    CONSTRAINT fk_CE_cargo FOREIGN KEY (id_cargo) REFERENCES Cargo (id_cargo),
+    CONSTRAINT fk_CE_empleado FOREIGN KEY (id_empleado) REFERENCES Empleados (id_empleado)
+);
+
+CREATE TABLE Empleados_areas(
+	id_empleado INT PRIMARY KEY NOT NULL,
+    id_area INT NOT NULL, 
+    fecha_incio DATE, 
+    fecha_fin DATE,
+    CONSTRAINT fk_EA_empleado FOREIGN KEY (id_empleado) REFERENCES Empleados (id_empleado),
+    CONSTRAINT fk_EA_area FOREIGN KEY (id_area) REFERENCES Areas (id_area)
+);
+
+CREATE TABLE Sucursales(
+	id_sucursal INT PRIMARY KEY NOT NULL,
+    nombre VARCHAR(20),
+    fecha_apertura DATE,
+    id_jefe INT,
+    fecha_inicio DATE,
+    fecha_cierre DATE,
+    id_region INT NOT NULL,
+    CONSTRAINT fk_S_region FOREIGN KEY (id_region) REFERENCES Regiones (id_region) 
+);
+
+CREATE TABLE Empleados_sucursales(
+	id_empleado INT PRIMARY KEY NOT NULL,
+    id_sucursal INT NOT NULL, 
+    fecha_incio_asignacion DATE, 
+    fecha_fin_asignacion DATE,
+    CONSTRAINT fk_ES_empleado FOREIGN KEY (id_empleado) REFERENCES Empleados (id_empleado),
+    CONSTRAINT fk_ES_sucursal FOREIGN KEY (id_sucursal) REFERENCES Sucursales (id_sucursal)
+);
+
+CREATE TABLE Empleados_telefonos(
+	id_empleado INT PRIMARY KEY NOT NULL,
+    id_telefonos INT NOT NULL
+);
+
+ALTER TABLE Empleados_telefonos ADD FOREIGN KEY (id_empleado) REFERENCES Empleados (id_empleado);
+ALTER TABLE Empleados_telefonos ADD FOREIGN KEY (id_telefonos) REFERENCES Telefonos (id_telefonos);
+
+CREATE TABLE Sucursales_areas(
+	id_sucursal INT PRIMARY KEY NOT NULL,
+    id_area INT NOT NULL
+);
+ALTER TABLE Sucursales_areas ADD FOREIGN KEY (id_sucursal) REFERENCES Sucursales (id_sucursal);
+ALTER TABLE Sucursales_areas ADD FOREIGN KEY (id_area) REFERENCES Areas (id_area);
+
+CREATE TABLE Paises(
+	id_pais INT PRIMARY KEY NOT NULL,
+    descripcion VARCHAR(20),
+    id_region INT NOT NULL,
+	CONSTRAINT fk_paises_region FOREIGN KEY (id_region) REFERENCES Regiones (id_region)
+);
